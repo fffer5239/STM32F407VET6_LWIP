@@ -130,7 +130,7 @@ int main(void)
       if (tcp_client_is_connected()) {
         char msg[64];
         g_test_send_count++;
-        snprintf(msg, sizeof(msg), "Hello from STM32 #%d\r\n", g_test_send_count);
+        snprintf(msg, sizeof(msg), "Hello from STM32F407VET6  #%d\r\n", g_test_send_count);
         tcp_client_send_data(msg);
       } else {
         printf("Main: TCP Client not connected, retrying...\r\n");

@@ -55,7 +55,6 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern ETH_HandleTypeDef heth;
 
 /* USER CODE BEGIN EV */
 
@@ -198,14 +197,6 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32f4xx.s).                    */
 /******************************************************************************/
-
-/**
-  * @brief This function handles Ethernet global interrupt.
-  */
-void ETH_IRQHandler(void)
-{
-  HAL_ETH_IRQHandler(&heth);
-}
 
 /* USER CODE BEGIN 1 */
 
