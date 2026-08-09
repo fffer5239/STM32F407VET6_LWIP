@@ -5519,6 +5519,11 @@
               <FileType>1</FileType>
               <FilePath>..\BSP\tcp\TcpServer.c</FilePath>
             </File>
+            <File>
+              <FileName>TcpCommon.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\tcp\TcpCommon.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

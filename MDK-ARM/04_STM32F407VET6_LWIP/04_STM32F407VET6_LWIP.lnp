@@ -106,6 +106,7 @@
 "04_stm32f407vet6_lwip\mqtt.o"
 "04_stm32f407vet6_lwip\tcpclient.o"
 "04_stm32f407vet6_lwip\tcpserver.o"
+"04_stm32f407vet6_lwip\tcpcommon.o"
 --library_type=microlib --strict --scatter "04_STM32F407VET6_LWIP\04_STM32F407VET6_LWIP.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

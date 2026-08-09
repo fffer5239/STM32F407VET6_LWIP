@@ -1,4 +1,5 @@
 #include "TcpClient.h"
+#include "TcpCommon.h"
 #include "lwip/tcp.h"
 #include "lwip/ip_addr.h"
 #include "lwip/pbuf.h"
@@ -8,6 +9,9 @@
 static struct tcp_pcb *g_client_pcb = NULL;
 static bool g_is_connected = false;
 int g_reconnect_attempts = 0;
+
+static tcp_client_rx_cb_t s_rx_cb = NULL;
+static uint8_t s_rx_buf[TCP_RX_BUFFER_SIZE];
 
 static err_t tcp_client_recv_callback(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err);
 static err_t tcp_client_sent_callback(void *arg, struct tcp_pcb *pcb, u16_t len);
@@ -32,11 +36,17 @@ static err_t tcp_client_recv_callback(void *arg, struct tcp_pcb *pcb, struct pbu
         return ERR_OK;
     }
 
-    char buffer[256];
-    u16_t copy_len = p->tot_len > (sizeof(buffer) - 1) ? (sizeof(buffer) - 1) : p->tot_len;
-    pbuf_copy_partial(p, buffer, copy_len, 0);
-    buffer[copy_len] = '\0';
-    printf("TCP Client Recv: %s\r\n", buffer);
+    u16_t copy_len = p->tot_len > TCP_RX_BUFFER_SIZE ? TCP_RX_BUFFER_SIZE : p->tot_len;
+    pbuf_copy_partial(p, s_rx_buf, copy_len, 0);
+    if (p->tot_len > TCP_RX_BUFFER_SIZE) {
+        printf("TCP Client: RX too large (%u), truncated to %u\r\n", p->tot_len, TCP_RX_BUFFER_SIZE);
+    }
+
+    tcp_print_hex("TCP Client RX", s_rx_buf, copy_len);
+
+    if (s_rx_cb != NULL) {
+        s_rx_cb(s_rx_buf, copy_len);
+    }
 
     tcp_recved(pcb, p->tot_len);
     pbuf_free(p);
@@ -112,6 +122,12 @@ void tcp_client_init(void)
 
     tcp_arg(g_client_pcb, NULL);
 
+    /* 必须在 connect 之前注册错误回调：
+       否则首次连接失败时（PC 端监听未就绪 → RST/超时），lwIP 释放 pcb 后
+       静默失败，g_client_pcb 变成悬空指针，主循环重连会被
+       "Already initialized" 挡住，永远无法再连接 */
+    tcp_err(g_client_pcb, tcp_client_err_callback);
+
     err_t err = tcp_connect(g_client_pcb, &server_ip, TCP_CLIENT_PORT, tcp_client_connected_callback);
     if (err != ERR_OK) {
         printf("TCP Client: tcp_connect failed, err=%d\r\n", err);
@@ -121,14 +137,17 @@ void tcp_client_init(void)
     }
 }
 
-void tcp_client_send_data(char* data)
+void tcp_client_send_bytes(const uint8_t *data, uint16_t len)
 {
     if (!g_is_connected || g_client_pcb == NULL) {
         printf("TCP Client: Not connected, cannot send\r\n");
         return;
     }
 
-    u16_t len = (u16_t)strlen(data);
+    if (len == 0) {
+        return;
+    }
+
     err_t err = tcp_write(g_client_pcb, data, len, TCP_WRITE_FLAG_COPY);
     if (err != ERR_OK) {
         printf("TCP Client: tcp_write failed, err=%d\r\n", err);
@@ -136,5 +155,15 @@ void tcp_client_send_data(char* data)
     }
 
     tcp_output(g_client_pcb);
-    printf("TCP Client Sent: %s\r\n", data);
+    tcp_print_hex("TCP Client TX", data, len);
+}
+
+void tcp_client_send_data(char* data)
+{
+    tcp_client_send_bytes((const uint8_t *)data, (uint16_t)strlen(data));
+}
+
+void tcp_client_set_rx_callback(tcp_client_rx_cb_t cb)
+{
+    s_rx_cb = cb;
 }

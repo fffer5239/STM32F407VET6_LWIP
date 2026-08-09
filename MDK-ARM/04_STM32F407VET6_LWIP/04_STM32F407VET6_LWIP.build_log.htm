@@ -22,12 +22,21 @@ Dialog DLL:      TCM.DLL V1.56.4.0
  
 <h2>Project:</h2>
 D:\Users\Desktop\Lc_Space\basic_folder\03_Firmware\04_STM32F407VET6_LWIP\MDK-ARM\04_STM32F407VET6_LWIP.uvprojx
-Project File Date:  08/08/2026
+Project File Date:  08/09/2026
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\softinstall\keil\Core\ARM\ARMCC\Bin'
 Build target '04_STM32F407VET6_LWIP'
-"04_STM32F407VET6_LWIP\04_STM32F407VET6_LWIP.axf" - 0 Error(s), 0 Warning(s).
+compiling TcpClient.c...
+..\BSP\tcp\TcpClient.h(38): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\BSP\tcp\TcpClient.c(169): warning:  #1-D: last line of file ends without a newline
+  }
+..\BSP\tcp\TcpClient.c: 2 warnings, 0 errors
+linking...
+Program Size: Code=54240 RO-data=1140 RW-data=280 ZI-data=43696  
+FromELF: creating hex file...
+"04_STM32F407VET6_LWIP\04_STM32F407VET6_LWIP.axf" - 0 Error(s), 2 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -51,7 +60,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.6.0
       Include file:  CMSIS/Core/Include/tz_context.h
-Build Time Elapsed:  00:00:02
+Build Time Elapsed:  00:00:03
 </pre>
 </body>
 </html>

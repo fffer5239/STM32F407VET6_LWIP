@@ -1,6 +1,7 @@
 04_stm32f407vet6_lwip\tcpclient.o: ..\BSP\tcp\TcpClient.c
 04_stm32f407vet6_lwip\tcpclient.o: ..\BSP\tcp\TcpClient.h
 04_stm32f407vet6_lwip\tcpclient.o: D:\softinstall\keil\Core\ARM\ARMCC\Bin\..\include\stdbool.h
+04_stm32f407vet6_lwip\tcpclient.o: D:\softinstall\keil\Core\ARM\ARMCC\Bin\..\include\stdint.h
 04_stm32f407vet6_lwip\tcpclient.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/tcp.h
 04_stm32f407vet6_lwip\tcpclient.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/opt.h
 04_stm32f407vet6_lwip\tcpclient.o: ../LWIP/Target/lwipopts.h
@@ -12,7 +13,6 @@
 04_stm32f407vet6_lwip\tcpclient.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h
 04_stm32f407vet6_lwip\tcpclient.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h
 04_stm32f407vet6_lwip\tcpclient.o: ../Drivers/CMSIS/Include/core_cm4.h
-04_stm32f407vet6_lwip\tcpclient.o: D:\softinstall\keil\Core\ARM\ARMCC\Bin\..\include\stdint.h
 04_stm32f407vet6_lwip\tcpclient.o: ../Drivers/CMSIS/Include/cmsis_version.h
 04_stm32f407vet6_lwip\tcpclient.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 04_stm32f407vet6_lwip\tcpclient.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
@@ -68,4 +68,5 @@
 04_stm32f407vet6_lwip\tcpclient.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/prot/ip.h
 04_stm32f407vet6_lwip\tcpclient.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/icmp.h
 04_stm32f407vet6_lwip\tcpclient.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/prot/icmp.h
+04_stm32f407vet6_lwip\tcpclient.o: ..\BSP\tcp\TcpCommon.h
 04_stm32f407vet6_lwip\tcpclient.o: D:\softinstall\keil\Core\ARM\ARMCC\Bin\..\include\string.h

@@ -48,8 +48,8 @@
 
 /* USER CODE BEGIN PV */
 static uint32_t g_led_timer = 0;
-static uint32_t g_test_send_timer = 0;
-static int g_test_send_count = 0;
+static uint32_t g_hex_send_timer = 0;
+static int g_hex_count = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -60,6 +60,20 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+/* TCP Client 接收回调：在这里解析收到的命令/数据 */
+static void on_client_rx(const uint8_t *data, uint16_t len)
+{
+    (void)data;
+    printf("Main: client RX cb len=%u\r\n", len);
+}
+
+/* TCP Server 接收回调：slot 指明是哪个客户端发的 */
+static void on_server_rx(int slot, const uint8_t *data, uint16_t len)
+{
+    (void)data;
+    printf("Main: server RX cb slot=%d len=%u\r\n", slot, len);
+}
 
 /* USER CODE END 0 */
 
@@ -102,11 +116,13 @@ int main(void)
   printf("========================================\r\n\r\n");
 
   tcp_server_init();
+  tcp_server_set_rx_callback(on_server_rx);
 
   printf("\r\nWaiting 2s for network to stabilize...\r\n");
   HAL_Delay(2000);
 
   tcp_client_init();
+  tcp_client_set_rx_callback(on_client_rx);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -125,13 +141,16 @@ int main(void)
       HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
     }
 
-    if (now - g_test_send_timer >= 5000) {
-      g_test_send_timer = now;
+    if (now - g_hex_send_timer >= 2000) {
+      g_hex_send_timer = now;
       if (tcp_client_is_connected()) {
-        char msg[64];
-        g_test_send_count++;
-        snprintf(msg, sizeof(msg), "Hello from STM32F407VET6  #%d\r\n", g_test_send_count);
-        tcp_client_send_data(msg);
+        /* 演示：每 2 秒发 10 字节递增的 HEX 数组，便于观察每次内容在变化 */
+        uint8_t hex_data[10];
+        for (int i = 0; i < 10; i++) {
+          hex_data[i] = (uint8_t)(g_hex_count + i);
+        }
+        g_hex_count++;
+        tcp_client_send_bytes(hex_data, sizeof(hex_data));
       } else {
         printf("Main: TCP Client not connected, retrying...\r\n");
         tcp_client_init();
